@@ -23,7 +23,7 @@ public class DemoRestAIO {
                 .log(LogDetail.ALL);
         responseSpecification = responseSpecBuilder.build();
     }
-    @Test (groups = {"P0","TES-TC-8"}, priority = 1)
+    @Test (priority = 1)
     public void login() {
         String requestBody = "{\n" +
                 "  \"countryCode\": \"65\",\n" +
@@ -38,7 +38,7 @@ public class DemoRestAIO {
                 assertThat().
                 body("error_msg", is(equalTo("Success")));
     }
-    @Test (groups = {"P0","TES-TC-9"}, priority = 2)
+    @Test (priority = 2)
     public void verifyPin() {
         String requestBody = "{\n" +
                 "  \"countryCode\": \"65\",\n" +
@@ -59,7 +59,7 @@ public class DemoRestAIO {
                 body("data.accessToken", is(not(empty()))).
                 extract().response().jsonPath().get("data.accessToken");
     }
-    @Test (groups = {"P0","TES-TC-10"}, dependsOnMethods = {"login", "verifyPin"})
+    @Test (dependsOnMethods = {"login", "verifyPin"})
     public void getProfile() {
         given().
                 baseUri("https://api-uat.getgo.sg").
