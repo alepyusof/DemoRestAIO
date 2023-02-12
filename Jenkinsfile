@@ -4,26 +4,41 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'rm -rf build'
-                sh 'mkdir build'
-                sh 'touch build/car.txt'
-                sh 'echo "chasis" >> build/car.txt'
-                sh 'echo "engine" >> build/car.txt'
-                sh 'echo "body" >> build/car.txt'
+                echo 'Hi'
             }
         }
         stage('Test') {
             steps {
-                sh 'test -f build/car.txt'
-                sh 'grep "chasis" > build/car.txt'
-                sh 'grep "engine" > build/car.txt'
-                sh 'grep "body" > build/car.txt'
+                input('Do you want to proceed?')
             }
         }
         stage('Publish') {
+            when {
+                not {
+                    branch "main"
+                }
+            }
             steps {
-                archiveArtifacts artifacts: 'build/'
+                echo "Hello"
             }
         }
+        stage('Done') {
+            parallel {
+                stage('Unit Test') {
+                    steps {
+                        echo "Running the unit test..."
+                    }
+                }
+                stage('Integration Test') {
+                    agent {
+                        docker {
+                            reuseNode false
+                        }
+                    }
+                    steps {
+                        echo 'Running the integration test...'
+                    }
+                }
+            }
     }
 }
